@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2022 Proton Technologies AG
+ * This file is part of Proton Technologies AG and Proton Mail.
+ *
+ * Proton Mail is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Proton Mail is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Proton Mail. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package ch.protonmail.android.mailupselling.data.datasource
+
+import arrow.core.Either
+import ch.protonmail.android.mailcommon.data.mapper.toEither
+import ch.protonmail.android.mailcommon.domain.model.DataError
+import ch.protonmail.android.mailupselling.data.remote.NPSApi
+import ch.protonmail.android.mailupselling.data.remote.resource.NPSFeedbackBody
+import me.proton.core.domain.entity.UserId
+import me.proton.core.network.data.ApiProvider
+import okhttp3.ResponseBody
+import javax.inject.Inject
+
+class NPSFeedbackRemoteDataSourceImpl @Inject constructor(
+    private val apiProvider: ApiProvider
+) : NPSFeedbackRemoteDataSource {
+
+    override suspend fun submit(userId: UserId, body: NPSFeedbackBody): Either<DataError.Remote, ResponseBody> {
+        return apiProvider.get<NPSApi>(userId).invoke {
+            submit(body)
+        }.toEither()
+    }
+
+    override suspend fun skip(userId: UserId, body: NPSFeedbackBody): Either<DataError.Remote, ResponseBody> {
+        return apiProvider.get<NPSApi>(userId).invoke {
+            skip(body)
+        }.toEither()
+    }
+}

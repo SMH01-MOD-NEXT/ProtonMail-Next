@@ -16,10 +16,16 @@
  * along with Proton Mail. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ch.protonmail.android.mailupselling.domain.model.telemetry
+package ch.protonmail.android.mailupselling.data.datasource
 
-sealed interface NPSFeedbackTelemetryEventType {
+import arrow.core.Either
+import ch.protonmail.android.mailcommon.domain.model.DataError
+import ch.protonmail.android.mailupselling.data.remote.resource.NPSFeedbackBody
+import me.proton.core.domain.entity.UserId
+import okhttp3.ResponseBody
 
-    data class SubmitTap(val ratingValue: Int, val comment: String?) : NPSFeedbackTelemetryEventType
-    data object Skipped : NPSFeedbackTelemetryEventType
+interface NPSFeedbackRemoteDataSource {
+    suspend fun submit(userId: UserId, body: NPSFeedbackBody): Either<DataError.Remote, ResponseBody>
+
+    suspend fun skip(userId: UserId, body: NPSFeedbackBody): Either<DataError.Remote, ResponseBody>
 }

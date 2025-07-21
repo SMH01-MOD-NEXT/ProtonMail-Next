@@ -18,16 +18,12 @@
 
 package ch.protonmail.android.mailupselling.domain.usecase
 
-import ch.protonmail.android.mailupselling.domain.model.telemetry.NPSFeedbackTelemetryEventType
-import ch.protonmail.android.mailupselling.domain.repository.NPSFeedbackTelemetryRepository
 import javax.inject.Inject
 
 class SkipNPSFeedback @Inject constructor(
-    private val telemetryRepo: NPSFeedbackTelemetryRepository
+    private val enqueueNewNPSFeedback: EnqueueNewNPSFeedback
 ) {
     operator fun invoke() {
-        telemetryRepo.trackEvent(
-            NPSFeedbackTelemetryEventType.Skipped
-        )
+        enqueueNewNPSFeedback.skip()
     }
 }

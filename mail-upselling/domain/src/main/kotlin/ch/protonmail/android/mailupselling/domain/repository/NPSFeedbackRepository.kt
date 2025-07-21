@@ -18,9 +18,19 @@
 
 package ch.protonmail.android.mailupselling.domain.repository
 
-import ch.protonmail.android.mailupselling.domain.model.telemetry.NPSFeedbackTelemetryEventType
+import me.proton.core.domain.entity.UserId
 
-interface NPSFeedbackTelemetryRepository {
+interface NPSFeedbackRepository {
 
-    fun trackEvent(eventType: NPSFeedbackTelemetryEventType)
+    @Suppress("LongParameterList")
+    fun enqueue(
+        userId: UserId,
+        ratingValue: Int?,
+        comment: String?,
+        userTier: String,
+        userCountry: String,
+        daysFromSignup: Int,
+        skipped: Boolean,
+        installedProtonApps: Set<InstalledProtonApp>
+    )
 }

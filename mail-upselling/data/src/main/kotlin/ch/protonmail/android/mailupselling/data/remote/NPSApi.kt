@@ -16,14 +16,19 @@
  * along with Proton Mail. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ch.protonmail.android.mailupselling.domain.usecase
+package ch.protonmail.android.mailupselling.data.remote
 
-import javax.inject.Inject
+import ch.protonmail.android.mailupselling.data.remote.resource.NPSFeedbackBody
+import me.proton.core.network.data.protonApi.BaseRetrofitApi
+import okhttp3.ResponseBody
+import retrofit2.http.Body
+import retrofit2.http.POST
 
-class SubmitNPSFeedback @Inject constructor(
-    private val enqueueNewNPSFeedback: EnqueueNewNPSFeedback
-) {
-    operator fun invoke(comment: String, ratingValue: Int) {
-        enqueueNewNPSFeedback.submit(ratingValue, comment)
-    }
+interface NPSApi : BaseRetrofitApi {
+
+    @POST("api/vpn/v1/nps/dismiss")
+    suspend fun skip(@Body body: NPSFeedbackBody): ResponseBody
+
+    @POST("api/vpn/v1/nps/submit")
+    suspend fun submit(@Body body: NPSFeedbackBody): ResponseBody
 }

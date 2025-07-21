@@ -20,7 +20,10 @@ package ch.protonmail.android.mailupselling.dagger
 
 import android.content.Context
 import ch.protonmail.android.mailupselling.data.UpsellingDataStoreProvider
+import ch.protonmail.android.mailupselling.data.datasource.NPSFeedbackRemoteDataSource
+import ch.protonmail.android.mailupselling.data.datasource.NPSFeedbackRemoteDataSourceImpl
 import ch.protonmail.android.mailupselling.data.repository.DriveSpotlightVisibilityRepositoryImpl
+import ch.protonmail.android.mailupselling.data.repository.NPSFeedbackRepositoryImpl
 import ch.protonmail.android.mailupselling.data.repository.UpsellingVisibilityRepositoryImpl
 import ch.protonmail.android.mailupselling.domain.annotations.DriveSpotlightEnabled
 import ch.protonmail.android.mailupselling.domain.annotations.ForceOneClickUpsellingDetailsOverride
@@ -35,8 +38,7 @@ import ch.protonmail.android.mailupselling.domain.annotations.UpsellingOnboardin
 import ch.protonmail.android.mailupselling.domain.repository.DriveSpotlightTelemetryRepository
 import ch.protonmail.android.mailupselling.domain.repository.DriveSpotlightTelemetryRepositoryImpl
 import ch.protonmail.android.mailupselling.domain.repository.DriveSpotlightVisibilityRepository
-import ch.protonmail.android.mailupselling.domain.repository.NPSFeedbackTelemetryRepository
-import ch.protonmail.android.mailupselling.domain.repository.NPSFeedbackTelemetryRepositoryImpl
+import ch.protonmail.android.mailupselling.domain.repository.NPSFeedbackRepository
 import ch.protonmail.android.mailupselling.domain.repository.PostSubscriptionTelemetryRepository
 import ch.protonmail.android.mailupselling.domain.repository.PostSubscriptionTelemetryRepositoryImpl
 import ch.protonmail.android.mailupselling.domain.repository.UpsellingTelemetryRepository
@@ -143,13 +145,17 @@ interface UpsellingModuleBindings {
 
     @Binds
     @Reusable
-    fun provideNPSFeedbackTelemetryRepository(impl: NPSFeedbackTelemetryRepositoryImpl): NPSFeedbackTelemetryRepository
+    fun provideNPSFeedbackRepository(impl: NPSFeedbackRepositoryImpl): NPSFeedbackRepository
 
     @Binds
     @Reusable
     fun providePostSubscriptionTelemetryRepo(
         impl: PostSubscriptionTelemetryRepositoryImpl
     ): PostSubscriptionTelemetryRepository
+
+    @Binds
+    @Reusable
+    fun bindsNPSFeedbackRemoteDataSource(impl: NPSFeedbackRemoteDataSourceImpl): NPSFeedbackRemoteDataSource
 }
 
 @Module

@@ -16,27 +16,24 @@
  * along with Proton Mail. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ch.protonmail.android.mailupselling.domain.repository
+package ch.protonmail.upselling.domain.usecase
 
 import java.time.Instant
+import java.time.ZoneId
 import java.util.Locale
 import java.util.TimeZone
-import arrow.core.left
 import arrow.core.right
 import ch.protonmail.android.mailcommon.domain.sample.UserSample
 import ch.protonmail.android.mailcommon.domain.usecase.GetAppLocale
-import ch.protonmail.android.mailupselling.domain.model.telemetry.NPSFeedbackEventDimensions
-import ch.protonmail.android.mailupselling.domain.model.telemetry.NPSFeedbackTelemetryEvent.Skipped
-import ch.protonmail.android.mailupselling.domain.model.telemetry.NPSFeedbackTelemetryEvent.SubmitButtonTapped
-import ch.protonmail.android.mailupselling.domain.model.telemetry.NPSFeedbackTelemetryEventType
 import ch.protonmail.android.mailupselling.domain.model.telemetry.data.AccountAge
 import ch.protonmail.android.mailupselling.domain.model.telemetry.data.SubscriptionName
-import ch.protonmail.android.mailupselling.domain.model.telemetry.data.toUpsellingTelemetryDimensionValue
+import ch.protonmail.android.mailupselling.domain.repository.GetInstalledProtonApps
+import ch.protonmail.android.mailupselling.domain.repository.InstalledProtonApp
+import ch.protonmail.android.mailupselling.domain.repository.NPSFeedbackRepository
+import ch.protonmail.android.mailupselling.domain.usecase.EnqueueNewNPSFeedback
 import ch.protonmail.android.mailupselling.domain.usecase.GetAccountAgeInDays
 import ch.protonmail.android.mailupselling.domain.usecase.GetSubscriptionName
-import ch.protonmail.android.mailupselling.domain.usecase.GetSubscriptionName.GetSubscriptionNameError
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -45,33 +42,34 @@ import io.mockk.verify
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import me.proton.core.auth.domain.usecase.GetPrimaryUser
-import me.proton.core.telemetry.domain.TelemetryManager
-import me.proton.core.telemetry.domain.entity.TelemetryPriority
 import me.proton.core.test.kotlin.TestCoroutineScopeProvider
 import me.proton.core.test.kotlin.TestDispatcherProvider
-import org.junit.Test
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.Test
 
-internal class NPSFeedbackTelemetryRepositoryImplTest {
+internal class EnqueueNewNPSFeedbackTest {
 
     private val getAccountAgeInDays = mockk<GetAccountAgeInDays>()
     private val getPrimaryUser = mockk<GetPrimaryUser>()
     private val getSubscriptionName = mockk<GetSubscriptionName>()
-    private val telemetryManager = mockk<TelemetryManager>()
+
     private val getAppLocale = mockk<GetAppLocale>()
     private val dispatcherProvider = TestDispatcherProvider(UnconfinedTestDispatcher())
     private val scopeProvider = TestCoroutineScopeProvider(dispatcherProvider)
     private val getInstalledProtonApps = mockk<GetInstalledProtonApps>()
+    private val repo = mockk<NPSFeedbackRepository>()
 
-    private val sut: NPSFeedbackTelemetryRepository
-        get() = NPSFeedbackTelemetryRepositoryImpl(
-            getAccountAgeInDays,
-            getPrimaryUser,
-            getSubscriptionName,
-            telemetryManager,
+    private val timezone = TimeZone.getTimeZone(ZoneId.of("GMT"))
+
+    private val sut: EnqueueNewNPSFeedback
+        get() = EnqueueNewNPSFeedback(
+            getAccountAgeInDays = getAccountAgeInDays,
+            getPrimaryUser = getPrimaryUser,
             getAppLocale = getAppLocale,
+            getSubscriptionName = getSubscriptionName,
             scopeProvider = scopeProvider,
+            repo = repo,
             getInstalledProtonApps = getInstalledProtonApps
         )
 
@@ -79,7 +77,7 @@ internal class NPSFeedbackTelemetryRepositoryImplTest {
 
     @BeforeTest
     fun setup() {
-        mockInstant()
+        mockTimes()
     }
 
     @AfterTest
@@ -88,29 +86,26 @@ internal class NPSFeedbackTelemetryRepositoryImplTest {
     }
 
     @Test
-    fun `should not track events when primary user is not found`() {
+    fun `should not track events when subscription user is not found`() {
         // Given
         coEvery { getPrimaryUser() } returns null
 
         // When
-        sut.trackEvent(NPSFeedbackTelemetryEventType.Skipped)
+        sut.skip()
 
         // Then
-        verify(exactly = 0) { telemetryManager.enqueue(any(), any(), any()) }
-    }
-
-    @Test
-    fun `should not track events when subscription name is not found`() {
-        // Given
-        coEvery { getPrimaryUser() } returns user
-        every { getAccountAgeInDays(user) } returns AccountAge(3)
-        coEvery { getSubscriptionName(user.userId) } returns GetSubscriptionNameError.left()
-
-        // When
-        sut.trackEvent(NPSFeedbackTelemetryEventType.Skipped)
-
-        // Then
-        verify(exactly = 0) { telemetryManager.enqueue(any(), any(), any()) }
+        verify(exactly = 0) {
+            repo.enqueue(
+                userId = any(),
+                ratingValue = any(),
+                comment = any(),
+                userTier = any(),
+                userCountry = any(),
+                daysFromSignup = any(),
+                skipped = any(),
+                installedProtonApps = any()
+            )
+        }
     }
 
     @Test
@@ -122,20 +117,23 @@ internal class NPSFeedbackTelemetryRepositoryImplTest {
         every { getAppLocale() } returns Locale.ENGLISH
         every { getInstalledProtonApps() } returns emptySet()
 
-        val expectedDimensions = NPSFeedbackEventDimensions().apply {
-            addPlanName("free")
-            addDaysSinceAccountCreation(AccountAge(7).toUpsellingTelemetryDimensionValue())
-            addTerritory(Locale.ENGLISH, TimeZone.getDefault())
-            addInstalledApps(emptySet())
-            addNoRatingValue()
-        }
-        val expectedEvent = Skipped(expectedDimensions).toTelemetryEvent()
-
         // When
-        sut.trackEvent(NPSFeedbackTelemetryEventType.Skipped)
+        sut.skip()
 
         // Then
-        coVerify(exactly = 1) { telemetryManager.enqueue(user.userId, expectedEvent, TelemetryPriority.Immediate) }
+
+        verify(exactly = 1) {
+            repo.enqueue(
+                userId = user.userId,
+                ratingValue = null,
+                comment = null,
+                userTier = "free",
+                userCountry = "English-Greenwich Mean Time",
+                daysFromSignup = 7,
+                skipped = true,
+                installedProtonApps = emptySet()
+            )
+        }
     }
 
     @Test
@@ -148,20 +146,23 @@ internal class NPSFeedbackTelemetryRepositoryImplTest {
         every { getInstalledProtonApps() } returns setOf(InstalledProtonApp.Calendar, InstalledProtonApp.VPN)
 
         val ratingValue = 4
-        val expectedDimensions = NPSFeedbackEventDimensions().apply {
-            addPlanName("unlimited")
-            addDaysSinceAccountCreation(AccountAge(2).toUpsellingTelemetryDimensionValue())
-            addTerritory(Locale.FRENCH, TimeZone.getDefault())
-            addInstalledApps(setOf(InstalledProtonApp.Calendar, InstalledProtonApp.VPN))
-            addRatingValue(ratingValue)
-        }
-        val expectedEvent = SubmitButtonTapped(expectedDimensions).toTelemetryEvent()
 
         // When
-        sut.trackEvent(NPSFeedbackTelemetryEventType.SubmitTap(ratingValue, null))
+        sut.submit(ratingValue, null)
 
         // Then
-        coVerify(exactly = 1) { telemetryManager.enqueue(user.userId, expectedEvent, TelemetryPriority.Immediate) }
+        verify(exactly = 1) {
+            repo.enqueue(
+                userId = user.userId,
+                ratingValue = ratingValue,
+                comment = null,
+                userTier = "unlimited",
+                userCountry = "French-Greenwich Mean Time",
+                daysFromSignup = 2,
+                skipped = false,
+                installedProtonApps = setOf(InstalledProtonApp.Calendar, InstalledProtonApp.VPN)
+            )
+        }
     }
 
     @Test
@@ -175,25 +176,29 @@ internal class NPSFeedbackTelemetryRepositoryImplTest {
 
         val ratingValue = 10
         val comment = "Great app!"
-        val expectedDimensions = NPSFeedbackEventDimensions().apply {
-            addPlanName("plus")
-            addDaysSinceAccountCreation(AccountAge(5).toUpsellingTelemetryDimensionValue())
-            addTerritory(Locale.GERMAN, TimeZone.getDefault())
-            addInstalledApps(setOf(InstalledProtonApp.Drive, InstalledProtonApp.VPN))
-            addComment(comment)
-            addRatingValue(ratingValue)
-        }
-        val expectedEvent = SubmitButtonTapped(expectedDimensions).toTelemetryEvent()
 
         // When
-        sut.trackEvent(NPSFeedbackTelemetryEventType.SubmitTap(ratingValue, comment))
+        sut.submit(ratingValue, comment)
 
         // Then
-        coVerify(exactly = 1) { telemetryManager.enqueue(user.userId, expectedEvent, TelemetryPriority.Immediate) }
+        verify(exactly = 1) {
+            repo.enqueue(
+                userId = user.userId,
+                ratingValue = ratingValue,
+                comment = comment,
+                userTier = "plus",
+                userCountry = "German-Greenwich Mean Time",
+                daysFromSignup = 5,
+                skipped = false,
+                installedProtonApps = setOf(InstalledProtonApp.Drive, InstalledProtonApp.VPN)
+            )
+        }
     }
 
-    private fun mockInstant() {
+    private fun mockTimes() {
         mockkStatic(Instant::class)
+        mockkStatic(TimeZone::class)
         every { Instant.now() } returns mockk { every { epochSecond } returns 0 }
+        every { TimeZone.getDefault() } returns timezone
     }
 }

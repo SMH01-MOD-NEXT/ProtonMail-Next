@@ -18,6 +18,7 @@
 
 package ch.protonmail.android.mailupselling.presentation.reducer
 
+import androidx.compose.ui.text.coerceIn
 import ch.protonmail.android.mailcommon.presentation.Effect
 import ch.protonmail.android.mailupselling.presentation.model.NPSFeedbackUIState
 import ch.protonmail.android.mailupselling.presentation.model.NPSFeedbackViewEvent
@@ -28,7 +29,7 @@ internal class NPSFeedbackContentReducer @Inject constructor() {
     fun newStateFrom(state: NPSFeedbackUIState, event: NPSFeedbackViewEvent): NPSFeedbackUIState = when (event) {
         NPSFeedbackViewEvent.ContentShown -> state
         is NPSFeedbackViewEvent.OptionSelected -> state.copy(selection = event.value, submitEnabled = true)
-        is NPSFeedbackViewEvent.FeedbackChanged -> state.copy(feedbackText = event.value)
+        is NPSFeedbackViewEvent.FeedbackChanged -> event.reduce(state)
         NPSFeedbackViewEvent.SubmitClicked -> state.copy(
             showSuccess = Effect.of(Unit),
             submitted = true,
@@ -36,4 +37,15 @@ internal class NPSFeedbackContentReducer @Inject constructor() {
         )
         NPSFeedbackViewEvent.Dismissed -> state
     }
+
+    private fun NPSFeedbackViewEvent.FeedbackChanged.reduce(state: NPSFeedbackUIState) = state.copy(
+        feedbackText = if (value.text.length > MAX_FEEDBACK_LENGTH) {
+            val newSelection = value.selection.coerceIn(minimumValue = 0, maximumValue = MAX_FEEDBACK_LENGTH)
+            value.copy(text = value.text.take(MAX_FEEDBACK_LENGTH), selection = newSelection)
+        } else {
+            value
+        }
+    )
 }
+
+private const val MAX_FEEDBACK_LENGTH = 250

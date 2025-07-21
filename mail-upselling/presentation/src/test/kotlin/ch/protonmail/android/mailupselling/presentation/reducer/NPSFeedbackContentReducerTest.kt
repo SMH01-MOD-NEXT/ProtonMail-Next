@@ -80,6 +80,27 @@ internal class NPSFeedbackContentReducerTest {
     }
 
     @Test
+    fun `should cap feedback to max length`() {
+        // When
+        val longValue = (0 until 249).joinToString(separator = "") { it.toString().take(1) }
+        val stateWithLongText = stateWithSelection.copy(
+            feedbackText = TextFieldValue(longValue)
+        )
+        val actual = sut.newStateFrom(
+            stateWithLongText,
+            NPSFeedbackViewEvent.FeedbackChanged(TextFieldValue(longValue + "ABC"))
+        )
+
+        // Then
+        assertEquals(
+            stateWithFeedback.copy(
+                feedbackText = TextFieldValue(longValue + "A")
+            ),
+            actual
+        )
+    }
+
+    @Test
     fun `should mark submitted`() {
         // When
         val actual = sut.newStateFrom(stateWithFeedback, NPSFeedbackViewEvent.SubmitClicked)

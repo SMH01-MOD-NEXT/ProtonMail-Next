@@ -21,6 +21,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -47,6 +48,11 @@ android {
 
         implementation(libs.androidx.datastore.preferences)
         implementation(libs.arrow.core)
+
+        implementation(libs.bundles.module.data)
+        implementation(libs.androidx.hilt.work)
+
+        implementation(libs.proton.core.network)
 
         implementation(project(":mail-upselling:domain"))
         implementation(project(":mail-common:data"))
