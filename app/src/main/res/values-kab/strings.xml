@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Izen yettwazen</string>
   <string name="mailbox_message_sending_error">Tuccḍa deg tuzna n yizen</string>
   <string name="mailbox_message_sending_error_address_disabled">Tansa-a tensa, tecceḍ tuzna</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">Ddu ɣer Yirewwayen</string>
   <string name="mailbox_attachment_uploading_error">Tuccḍa deg usali n umedday</string>
   <string name="notification_switched_account">Yettwabeddel ɣer umiḍan %s</string>

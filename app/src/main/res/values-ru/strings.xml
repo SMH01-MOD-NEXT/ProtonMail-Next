@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Сообщение отправлено</string>
   <string name="mailbox_message_sending_error">Ошибка при отправке сообщения</string>
   <string name="mailbox_message_sending_error_address_disabled">Этот адрес отключён, отправка не выполнена</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">Перейти в Черновики</string>
   <string name="mailbox_attachment_uploading_error">Ошибка загрузки вложения</string>
   <string name="notification_switched_account">Вы переключились на аккаунт %s</string>

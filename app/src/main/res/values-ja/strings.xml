@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">メッセージが送信されました</string>
   <string name="mailbox_message_sending_error">メッセージ送信エラー</string>
   <string name="mailbox_message_sending_error_address_disabled">アドレスが無効です。送信できません。</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">下書きを開く</string>
   <string name="mailbox_attachment_uploading_error">添付ファイルのアップロードエラー</string>
   <string name="notification_switched_account">アカウント %s に切り替えました</string>

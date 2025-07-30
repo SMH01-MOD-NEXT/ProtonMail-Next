@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Το μήνυμα στάλθηκε</string>
   <string name="mailbox_message_sending_error">Σφάλμα κατά την αποστολή του μηνύματος</string>
   <string name="mailbox_message_sending_error_address_disabled">Αυτή η διεύθυνση είναι απενεργοποιημένη, η αποστολή απέτυχε.</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s είναι απενεργοποιημένη, η αποστολή απέτυχε</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s και %d επιπλέον διευθύνσεις είναι απενεργοποιημένες, η αποστολή απέτυχε</string>
   <string name="mailbox_message_sending_error_action">Μετάβαση στα Πρόχειρα</string>
   <string name="mailbox_attachment_uploading_error">Σφάλμα κατά τη μεταφόρτωση συνημμένου</string>
   <string name="notification_switched_account">Έγινε αλλαγή σε λογαριασμό %s</string>

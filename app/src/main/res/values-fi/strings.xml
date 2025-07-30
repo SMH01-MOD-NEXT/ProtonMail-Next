@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Viesti lähetettiin</string>
   <string name="mailbox_message_sending_error">Virhe lähetettäessä viestiä</string>
   <string name="mailbox_message_sending_error_address_disabled">Tämä osoite on poistettu käytöstä, lähettäminen epäonnistui.</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">Avaa luonnokset</string>
   <string name="mailbox_attachment_uploading_error">Virhe lisättäessä liitettä</string>
   <string name="notification_switched_account">Vaihdettiin tiliin %s</string>

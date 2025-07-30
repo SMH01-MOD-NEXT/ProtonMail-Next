@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Besked sendt</string>
   <string name="mailbox_message_sending_error">Fejl ved afsendelse af besked</string>
   <string name="mailbox_message_sending_error_address_disabled">Denne adresse er deaktiveret, afsendelse mislykkedes</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s er deaktiveret, afsendelse mislykkedes</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s og %d flere adresser er deaktiveret, afsendelse mislykkedes</string>
   <string name="mailbox_message_sending_error_action">Gå til kladder</string>
   <string name="mailbox_attachment_uploading_error">Fejl ved upload af vedhæftning</string>
   <string name="notification_switched_account">Skiftet til konto %s</string>

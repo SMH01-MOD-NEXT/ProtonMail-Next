@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Sporočilo poslano</string>
   <string name="mailbox_message_sending_error">Napaka pri pošiljanju sporočila</string>
   <string name="mailbox_message_sending_error_address_disabled">Ta naslov je onemogočen. Pošiljanje ni uspelo.</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">Pojdi v mapo Osnutki</string>
   <string name="mailbox_attachment_uploading_error">Napaka pri nalaganju priponke</string>
   <string name="notification_switched_account">Preklopili ste na račun %s</string>

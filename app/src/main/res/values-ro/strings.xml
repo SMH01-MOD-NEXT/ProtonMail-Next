@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Mesaj trimis</string>
   <string name="mailbox_message_sending_error">Eroare trimitere mesaj</string>
   <string name="mailbox_message_sending_error_address_disabled">Această adresă este dezactivată, trimiterea a eșuat.</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">Trimiterea a eșuat. %s este dezactivată.</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">Trimiterea a eșuat. %s și încă %d adrese sunt dezactivate.</string>
   <string name="mailbox_message_sending_error_action">Accesare Ciorne</string>
   <string name="mailbox_attachment_uploading_error">Eroare la încărcare atașament.</string>
   <string name="notification_switched_account">S-a comutat la contul %s</string>

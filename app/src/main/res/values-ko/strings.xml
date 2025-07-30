@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">메시지 보냄</string>
   <string name="mailbox_message_sending_error">메시지 전송 오류</string>
   <string name="mailbox_message_sending_error_address_disabled">비활성화 주소이므로 전송에 실패했습니다</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s이(가) 비활성화되었으므로 전송할 수 없습니다.</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s 및 %d개 이상 추가 주소가 비활성화되어 전송할 수 없습니다.</string>
   <string name="mailbox_message_sending_error_action">임시 보관함으로 이동하기</string>
   <string name="mailbox_attachment_uploading_error">첨부 파일 업로드 중 오류</string>
   <string name="notification_switched_account">\'%s\' 계정으로 전환됨</string>

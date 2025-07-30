@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">შეტყობინება გაიგზავნა</string>
   <string name="mailbox_message_sending_error">შეტყობინების გაგზავნის შეცდომა</string>
   <string name="mailbox_message_sending_error_address_disabled">This address is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">მონახაზებზე გადასვლა</string>
   <string name="mailbox_attachment_uploading_error">მიმაგრებული ფაილის ატვირთვის შეცდომა</string>
   <string name="notification_switched_account">Switched to account %s</string>

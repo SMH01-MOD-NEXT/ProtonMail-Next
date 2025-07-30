@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Mensaje enviado</string>
   <string name="mailbox_message_sending_error">Error al enviar el mensaje</string>
   <string name="mailbox_message_sending_error_address_disabled">Esta dirección está desactivada. Error con el envío.</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s está deshabilitado, envío fallido.</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s y %d más direcciones están deshabilitadas, envío fallido</string>
   <string name="mailbox_message_sending_error_action">Ir a Borradores</string>
   <string name="mailbox_attachment_uploading_error">Error al cargar el archivo adjunto</string>
   <string name="notification_switched_account">Se cambió a la cuenta %s</string>

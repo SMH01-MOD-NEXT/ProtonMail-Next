@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Паведамленне адпраўлена</string>
   <string name="mailbox_message_sending_error">Памылка адпраўкі паведамлення</string>
   <string name="mailbox_message_sending_error_address_disabled">Збой адпраўкі. Гэты адрас адключаны.</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s адключаны. Збой адпраўкі</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s і яшчэ %d адрасы адключаны. Збой адпраўкі</string>
   <string name="mailbox_message_sending_error_action">Перайсці ў Чарнавікі</string>
   <string name="mailbox_attachment_uploading_error">Памылка запампоўвання далучэння</string>
   <string name="notification_switched_account">Зменена на ўліковы запіс %s</string>

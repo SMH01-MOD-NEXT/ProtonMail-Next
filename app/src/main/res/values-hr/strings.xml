@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">Poruka je poslana</string>
   <string name="mailbox_message_sending_error">Pogreška pri slanju poruke</string>
   <string name="mailbox_message_sending_error_address_disabled">Ova adresa je onemogućena, a slanje nije uspjelo</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">Idi u skice</string>
   <string name="mailbox_attachment_uploading_error">Greška kod učitavanja privitka</string>
   <string name="notification_switched_account">Prebačeno na račun %s</string>

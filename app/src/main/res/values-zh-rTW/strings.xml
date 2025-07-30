@@ -35,6 +35,8 @@
   <string name="mailbox_message_sending_success">郵件已傳送</string>
   <string name="mailbox_message_sending_error">傳送郵件時發生錯誤</string>
   <string name="mailbox_message_sending_error_address_disabled">此位址已停用，傳送失敗</string>
+  <string name="mailbox_message_sending_error_address_disabled_single">%s is disabled, sending failed</string>
+  <string name="mailbox_message_sending_error_address_disabled_multiple">%s and %d more addresses are disabled, sending failed</string>
   <string name="mailbox_message_sending_error_action">前往草稿資料夾</string>
   <string name="mailbox_attachment_uploading_error">上載附件出現錯誤</string>
   <string name="notification_switched_account">已切換至帳號 %s</string>
