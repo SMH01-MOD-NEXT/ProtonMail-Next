@@ -1,7 +1,7 @@
 [versions]
 android-gradle-plugin = "8.7.3"
 google-services-plugin = "4.4.2"
-proton-core-plugin = "1.3.0"
+proton-core-plugin = "1.3.1"
 sentry-gradle-plugin = "4.14.1"
 
 accompanist = "0.30.1"
@@ -11,9 +11,9 @@ androidx-annotation = "1.9.1"
 androidx-appcompat = "1.7.0"
 androidx-biometrics = "1.2.0-alpha05"
 androidx-compose = "1.7.5"
-androidx-core = "1.13.1" # 1.15.0 requires compileSdk = 35
+androidx-core = "1.13.1"
 androidx-compose-tracing = "1.7.5"
-androidx-constraintlayout-compose = "1.0.1" # See MAILANDR-2396
+androidx-constraintlayout-compose = "1.0.1"
 androidx-customview = "1.2.0-alpha02"
 androidx-customview-poolingcontainer = "1.0.0"
 androidx-datastore = "1.1.1"
@@ -38,11 +38,11 @@ androidx-test-espresso = "3.6.1"
 androidx-test-uiautomator = "2.3.0"
 androidx-tracing = "1.2.0"
 androidx-webkit = "1.12.1"
-androidx-work = "2.9.1" # 2.10.0 requires compileSdk = 35
+androidx-work = "2.9.1"
 arrow-core = "1.2.4"
 cash-turbine = "1.0.0"
 coil = "2.4.0"
-dagger = "2.49"
+dagger = "2.53.1"
 detekt = "1.23.5"
 firebase-bom = "33.6.0"
 guava = "33.2.1-jre"
@@ -50,21 +50,23 @@ timber = "5.0.1"
 javax-inject = "1"
 junit = "4.13.2"
 jsoup = "1.16.1"
+# Kotlin 2.0 Configuration
 ksp-symbol-processing-api = "2.0.21-1.0.27"
 kotlin = "2.0.21"
 kotlin-compile-testing = "0.6.0"
-kotlinx-coroutines = "1.8.0"
+kotlinx-coroutines = "1.9.0"
 kotlinx-immutable-collections = "0.3.5"
-kotlinx-serialization = "1.6.3"
+kotlinx-serialization = "1.7.3"
 material = "1.12.0"
 mockk = "1.13.13"
 play-review = "2.0.2"
-proton-core = "34.0.1"
+proton-core = "36.3.1"
 kotlinpoet-ksp = "2.0.0"
 leakcanary = "2.12"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 sentry = "7.22.5"
+store = "5.0.0"
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -177,6 +179,7 @@ okhttp-tls = { module = "com.squareup.okhttp3:okhttp-tls", version.ref = "okhttp
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 sentry-compose = { module = "io.sentry:sentry-compose", version.ref = "sentry" }
 sentry = { module = "io.sentry:sentry", version.ref = "sentry" }
+store = { module = "org.mobilenativefoundation.store:store5", version.ref = "store" }
 plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref = "leakcanary" }
 
 # Proton Core libraries
@@ -358,7 +361,8 @@ module-data = [
     "javax-inject",
     "kotlin-serialization-json",
     "okhttp",
-    "retrofit"
+    "retrofit",
+    "store"
 ]
 
 module-domain = [

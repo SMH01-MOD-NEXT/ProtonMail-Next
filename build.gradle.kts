@@ -21,6 +21,7 @@ buildscript {
         google()
     }
     dependencies {
+        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.6")
         classpath(libs.android.tools.build)
         classpath(libs.kotlin.gradle)
         classpath(libs.hilt.android.gradle)

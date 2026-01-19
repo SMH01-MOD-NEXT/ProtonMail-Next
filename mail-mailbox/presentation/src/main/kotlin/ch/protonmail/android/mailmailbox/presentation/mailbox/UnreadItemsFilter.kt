@@ -18,7 +18,9 @@
 
 package ch.protonmail.android.mailmailbox.presentation.mailbox
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ChipDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FilterChip
@@ -28,9 +30,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import ch.protonmail.android.mailcommon.presentation.compose.MailDimens
 import ch.protonmail.android.mailcommon.presentation.mapper.UnreadCountValueMapper
 import ch.protonmail.android.mailmailbox.presentation.R
@@ -54,8 +58,20 @@ fun UnreadItemsFilter(
         }
 
         is UnreadFilterState.Data -> {
+            // New Proton Design: Circle/Pill shape (50% rounded)
+            val shape = CircleShape
+
+            // Border is visible only when NOT selected (outline style)
+            val border = if (state.isFilterEnabled) {
+                null
+            } else {
+                BorderStroke(1.dp, ProtonTheme.colors.iconWeak)
+            }
+
             FilterChip(
                 modifier = modifier.testTag(UnreadItemsFilterTestTags.UnreadFilterChip),
+                shape = shape,
+                border = border,
                 colors = chipColors(state.isFilterEnabled),
                 selected = state.isFilterEnabled,
                 onClick = {
@@ -99,42 +115,45 @@ private fun addCloseIconForEnabledState(state: UnreadFilterState.Data): @Composa
 @Composable
 private fun chipColors(isSelected: Boolean) = if (isSelected) {
     ChipDefaults.filterChipColors(
-        selectedBackgroundColor = ProtonTheme.colors.iconAccent,
+        selectedBackgroundColor = ProtonTheme.colors.iconAccent, // Brand color
         selectedContentColor = ProtonTheme.colors.textInverted
     )
 } else {
+    // Transparent background for the "Outline" look
     ChipDefaults.filterChipColors(
-        backgroundColor = ProtonTheme.colors.backgroundSecondary,
-        contentColor = ProtonTheme.colors.textAccent
+        backgroundColor = Color.Transparent,
+        contentColor = ProtonTheme.colors.textNorm
     )
 }
 
 @Preview
 @Composable
 fun InactiveUnreadFilterButtonPreview() {
-    UnreadItemsFilter(
-        state = UnreadFilterState.Data(DummyUnreadCount, false),
-        onFilterEnabled = {},
-        onFilterDisabled = {}
-    )
+    ProtonTheme {
+        UnreadItemsFilter(
+            state = UnreadFilterState.Data(DummyUnreadCount, false),
+            onFilterEnabled = {},
+            onFilterDisabled = {}
+        )
+    }
 }
 
 @Preview
 @Composable
 fun ActiveUnreadFilterButtonPreview() {
-    UnreadItemsFilter(
-        state = UnreadFilterState.Data(DummyUnreadCount, true),
-        onFilterEnabled = {},
-        onFilterDisabled = {}
-    )
+    ProtonTheme {
+        UnreadItemsFilter(
+            state = UnreadFilterState.Data(DummyUnreadCount, true),
+            onFilterEnabled = {},
+            onFilterDisabled = {}
+        )
+    }
 }
 
 private object PreviewData {
-
     const val DummyUnreadCount = 4
 }
 
 object UnreadItemsFilterTestTags {
-
     const val UnreadFilterChip = "UnreadFilterChip"
 }

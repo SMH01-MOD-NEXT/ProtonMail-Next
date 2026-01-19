@@ -42,10 +42,6 @@ import ch.protonmail.android.mailmessage.domain.model.MessageWithBody
 import ch.protonmail.android.mailmessage.domain.model.RefreshedMessageWithBody
 import ch.protonmail.android.mailmessage.domain.repository.MessageRepository
 import ch.protonmail.android.mailpagination.domain.model.PageKey
-import com.dropbox.android.external.store4.Fetcher
-import com.dropbox.android.external.store4.SourceOfTruth
-import com.dropbox.android.external.store4.StoreBuilder
-import com.dropbox.android.external.store4.StoreRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -57,6 +53,10 @@ import me.proton.core.data.arch.toDataResult
 import me.proton.core.domain.entity.UserId
 import me.proton.core.label.domain.entity.LabelId
 import me.proton.core.util.kotlin.CoroutineScopeProvider
+import org.mobilenativefoundation.store.store5.Fetcher
+import org.mobilenativefoundation.store.store5.SourceOfTruth
+import org.mobilenativefoundation.store.store5.StoreBuilder
+import org.mobilenativefoundation.store.store5.StoreReadRequest
 import okio.IOException
 import timber.log.Timber
 import javax.inject.Inject
@@ -74,6 +74,7 @@ class MessageRepositoryImpl @Inject constructor(
 
     private data class MessageKey(val userId: UserId, val messageId: MessageId)
 
+    // Migration note: .disableCache() is removed as Store5 memory cache is disabled by default unless a policy is provided.
     private val messageWithBodyStore: ProtonStore<MessageKey, MessageWithBody> = StoreBuilder.from(
         fetcher = Fetcher.of { key: MessageKey ->
             remoteDataSource.getMessageOrThrow(key.userId, key.messageId)
@@ -86,7 +87,7 @@ class MessageRepositoryImpl @Inject constructor(
                 localDataSource.upsertMessageWithBody(key.userId, messageWithBody)
             }
         )
-    ).disableCache().buildProtonStore(coroutineScopeProvider)
+    ).buildProtonStore(coroutineScopeProvider)
 
     override suspend fun getLocalMessages(userId: UserId, pageKey: PageKey) =
         localDataSource.getMessages(userId, pageKey)
@@ -148,7 +149,7 @@ class MessageRepositoryImpl @Inject constructor(
         userId: UserId,
         messageId: MessageId
     ): Flow<Either<DataError, MessageWithBody>> = messageWithBodyStore.stream(
-        StoreRequest.cached(MessageKey(userId, messageId), false)
+        StoreReadRequest.cached(MessageKey(userId, messageId), false)
     ).mapLatest { it.toDataResult() }
         .mapToEither()
         .distinctUntilChanged()

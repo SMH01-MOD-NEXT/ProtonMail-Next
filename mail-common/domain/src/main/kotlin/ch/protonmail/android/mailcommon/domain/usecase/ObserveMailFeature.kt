@@ -42,7 +42,10 @@ class ObserveMailFeature @Inject constructor(
                     featureId = feature.id,
                     value = defaultValue,
                     scope = Scope.Unknown,
-                    defaultValue = defaultValue
+                    defaultValue = defaultValue,
+                    variantName = null,
+                    payloadType = null,
+                    payloadValue = null
                 )
             }
 }

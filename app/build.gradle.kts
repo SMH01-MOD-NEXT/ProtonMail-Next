@@ -36,6 +36,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("me.proton.core.gradle-plugins.environment-config") version libs.versions.proton.core.plugin.get()
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.firebase.crashlytics")
 }
 
 val privateProperties = Properties().apply {
@@ -221,7 +222,7 @@ sentry {
 }
 
 dependencies {
-    implementation(files("../../proton-libs/gopenpgp/gopenpgp.aar"))
+  //  implementation(files("../../proton-libs/gopenpgp/gopenpgp.aar"))
 
     implementation(libs.bundles.appLibs)
     implementation(libs.proton.core.proguardRules)
@@ -263,6 +264,11 @@ dependencies {
     benchmarkImplementation(libs.androidx.tracing.perfetto.binary)
     // Also include configDaggerStatic to provide the required Hilt bindings in benchmark.
     benchmarkImplementation(libs.proton.core.configuration.dagger.static)
+
+    // Crashlytics
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
     testImplementation(libs.bundles.test)
     testImplementation(project(":test:test-data"))

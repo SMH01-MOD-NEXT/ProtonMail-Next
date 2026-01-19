@@ -36,10 +36,6 @@ import ch.protonmail.android.maillabel.domain.model.filterUnmodifiableLabels
 import ch.protonmail.android.mailmessage.data.local.MessageLocalDataSource
 import ch.protonmail.android.mailmessage.data.usecase.ExcludeDraftMessagesAlreadyInOutbox
 import ch.protonmail.android.mailpagination.domain.model.PageKey
-import com.dropbox.android.external.store4.Fetcher
-import com.dropbox.android.external.store4.SourceOfTruth
-import com.dropbox.android.external.store4.StoreBuilder
-import com.dropbox.android.external.store4.StoreRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -50,6 +46,10 @@ import me.proton.core.domain.arch.DataResult
 import me.proton.core.domain.entity.UserId
 import me.proton.core.label.domain.entity.LabelId
 import me.proton.core.util.kotlin.CoroutineScopeProvider
+import org.mobilenativefoundation.store.store5.Fetcher
+import org.mobilenativefoundation.store.store5.SourceOfTruth
+import org.mobilenativefoundation.store.store5.StoreBuilder
+import org.mobilenativefoundation.store.store5.StoreReadRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.min
@@ -74,13 +74,14 @@ class ConversationRepositoryImpl @Inject constructor(
             reader = { key: ConversationKey ->
                 conversationLocalDataSource.observeConversation(key.userId, key.conversationId)
             },
-            writer = { key, (conversation, messages) ->
+            // Fixed ambiguous destructuring by being explicit
+            writer = { key: ConversationKey, conversationWithMessages ->
+                val (conversation, messages) = conversationWithMessages
                 conversationLocalDataSource.upsertConversation(key.userId, conversation)
 
                 // Message can be in the outbox for sending, we should not overwrite them
                 val filteredMessages = excludeDraftMessagesAlreadyInOutbox(key.userId, messages)
                 messageLocalDataSource.upsertMessages(filteredMessages)
-
             }
         )
     ).buildProtonStore(coroutineScopeProvider)
@@ -125,7 +126,8 @@ class ConversationRepositoryImpl @Inject constructor(
         id: ConversationId,
         refreshData: Boolean
     ): Flow<DataResult<Conversation>> =
-        conversationStore.stream(StoreRequest.cached(ConversationKey(userId, id), refreshData))
+        // StoreRequest -> StoreReadRequest for Store5
+        conversationStore.stream(StoreReadRequest.cached(ConversationKey(userId, id), refreshData))
             .map { it.toDataResult() }
             .distinctUntilChanged()
 
